@@ -109,24 +109,23 @@ let activities = [
      }
  ];
 
- winddow.onload = function () {
-    // Main category - loads as soon as the window loads.
+window.onload = function () {
+    // Initialize the category dropdown menu
     initCategoryMenu();
 
+    const categoryMenu = document.getElementById("categoryMenu");
     categoryMenu.onchange = function () {
         selectedCategory();
     };
 
-    // Get the activity dropdown
     const activityMenu = document.getElementById("activityMenu");
-
-    // Set the onchange event for the activity dropdown
     activityMenu.onchange = function () {
         selectedActivity();
     };
 };
 
 function initCategoryMenu() {
+    console.log("category")
     const categoryMenu = document.getElementById("categoryMenu");
 
     let defaultOption = new Option("Select One");
@@ -182,6 +181,10 @@ function selectedCategory() {
     }
 }
 
+function selectedActivity() {
+    // Function to handle the selected activity from the dropdown
+    // ...
+}
 
 function displayTable(container, activity) {
     console.log("displayTable function called");
@@ -190,7 +193,6 @@ function displayTable(container, activity) {
 
     let headers = ["ID", "Name", "Description", "Location", "Price"];
 
-    // Create the header row.
     let headerRow = document.createElement("tr");
     headers.forEach(headerText => {
         let headerCell = document.createElement("th");
@@ -199,15 +201,14 @@ function displayTable(container, activity) {
     });
     table.appendChild(headerRow);
 
-    // Create a row for the current activity.
-    let row = document.createElement("tr");
+    // Create a row for each header and its corresponding data
     headers.forEach(header => {
+        let row = document.createElement("tr");
         let cell = document.createElement("td");
         cell.appendChild(document.createTextNode(activity[header.toLowerCase()]));
         row.appendChild(cell);
+        table.appendChild(row);
     });
-    table.appendChild(row);
 
-    // Append the table to the container.
     container.appendChild(table);
 }
