@@ -109,9 +109,21 @@ let activities = [
      }
  ];
 
-window.onload = function() {
-    // main category - loads as soon as windows load.
+ winddow.onload = function () {
+    // Main category - loads as soon as the window loads.
     initCategoryMenu();
+
+    categoryMenu.onchange = function () {
+        selectedCategory();
+    };
+
+    // Get the activity dropdown
+    const activityMenu = document.getElementById("activityMenu");
+
+    // Set the onchange event for the activity dropdown
+    activityMenu.onchange = function () {
+        selectedActivity();
+    };
 };
 
 function initCategoryMenu() {
@@ -124,16 +136,78 @@ function initCategoryMenu() {
         let categoryOption = new Option(category);
         categoryMenu.appendChild(categoryOption);
     });
+
+    // Set the onchange event for the category dropdown
+    categoryMenu.onchange = function () {
+        selectedCategory();
+    };
 }
 
-function selectedCategory(){
-
-    // grab the selection from the category. 
+function selectedCategory() {
+    console.log("selectedActivity function called");
+    // Grab the selection from the category.
     let category = document.getElementById("categoryMenu").value;
-
     let activityMenu = document.getElementById("activityMenu");
+    let tableContainer = document.getElementById("tableContainer");
 
-    // empty activity
-    activityMenu.innerHTML = ""; 
+    // Empty activity dropdown.
+    activityMenu.innerHTML = "";
+    let defaultActivityOption = new Option("Select One");
+    activityMenu.appendChild(defaultActivityOption);
+
+    // Clear the table.
+    tableContainer.innerHTML = "";
+
+    if (category !== "Select One") {
+        activities.forEach(activity => {
+            if (activity.category === category) {
+                let activityOption = new Option(
+                    activity.name,
+                    activity.id
+                );
+                activityMenu.appendChild(activityOption);
+            }
+        });
+
+        // Get the selected activity ID from the dropdown.
+        let selectedActivityId = document.getElementById("activityMenu").value;
+
+        // Find the selected activity in the activities array.
+        let selectedActivity = activities.find(activity => activity.id === selectedActivityId);
     
+        if (selectedActivity) {
+            // Display the selected activity.
+            displayTable(tableContainer, selectedActivity);
+        }
+    }
+}
+
+
+function displayTable(container, activity) {
+    console.log("displayTable function called");
+    let table = document.createElement("table");
+    table.setAttribute("border", "1");
+
+    let headers = ["ID", "Name", "Description", "Location", "Price"];
+
+    // Create the header row.
+    let headerRow = document.createElement("tr");
+    headers.forEach(headerText => {
+        let headerCell = document.createElement("th");
+        headerCell.appendChild(document.createTextNode(headerText));
+        headerRow.appendChild(headerCell);
+    });
+    table.appendChild(headerRow);
+
+    // Create a row for the current activity.
+    let row = document.createElement("tr");
+    headers.forEach(header => {
+        let cell = document.createElement("td");
+        cell.appendChild(document.createTextNode(activity[header.toLowerCase()]));
+        row.appendChild(cell);
+    });
+    table.appendChild(row);
+
+    // Append the table to the container.
+    container.appendChild(table);
 }
